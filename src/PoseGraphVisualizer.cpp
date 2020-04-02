@@ -22,10 +22,12 @@ PoseGraphVisualizer::PoseGraphVisualizer(const ros::NodeHandle& node_handle)
     m_pub_graph_nodes(m_node_handle.advertise<visualization_msgs::Marker>("nodes", 5)),
     m_pub_graph_edges(m_node_handle.advertise<visualization_msgs::Marker>("edges", 5)) {
 
-    }
+  ROS_INFO("starting the PoseGraphVisualizer...");
+
+}
 
 PoseGraphVisualizer::~PoseGraphVisualizer() {
-  ROS_INFO("shutting down the PoseGraphVisualizer");
+  ROS_INFO("...shutting down the PoseGraphVisualizer");
 }
 
 
@@ -47,7 +49,18 @@ void PoseGraphVisualizer::poseGraphCallback(const pose_graph_visualizer::GraphSE
 
   /* Cube lists render faster than marker arrays. Caveat is
   that each cube must have the same scale. */
+
   cube_list.type = visualization_msgs::Marker::CUBE_LIST;
+
+  // marker properties
+  cube_list.scale.x = 0.1;
+  cube_list.scale.y = 0.1;
+  cube_list.scale.z = 0.1;
+  cube_list.color.a = 1.0;
+  cube_list.color.r = 0.0;
+  cube_list.color.g = 0.0;
+  cube_list.color.b = 1.0;
+
 
   for (const auto& vertex : msg.vertices) {
 
@@ -63,9 +76,17 @@ void PoseGraphVisualizer::poseGraphCallback(const pose_graph_visualizer::GraphSE
   line_list.header.frame_id = msg.header.frame_id;
   line_list.header.stamp = msg.header.stamp;
 
+
   /* Line lists render faster than marker arrays, Caveat is
   that each line must have the same scale. */
   line_list.type = visualization_msgs::Marker::LINE_LIST;
+
+  line_list.scale.x = 0.02;
+  line_list.color.a = 1.0;
+  line_list.color.r = 0.0;
+  line_list.color.g = 1.0;
+  line_list.color.b = 0.0;
+
   for (const auto& edge : msg.edges) {
     //
     // get the first point of the edge

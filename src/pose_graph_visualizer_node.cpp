@@ -1,10 +1,6 @@
 /**
  * @file pose_graph_visualizer_node.cpp
- * @author your name (you@domain.com)
  * @brief Visualizes a pose graph published on the given topic.
- * @version 0.1
- * @date 2020-03-28
- *
  */
 
 #include <ros/ros.h>
@@ -13,9 +9,11 @@
 int main(int argc, char** argv) {
   ros::init(argc, argv, "pose_graph_visualizer_node");
 
-  ros::NodeHandle node_handle("pose_graph_visualizer");
+  ros::NodeHandle node_handle;
 
   pgv::PoseGraphVisualizer pose_graph_visualizer(node_handle);
+
+  ros::spin();
 
   return 0;
 }
