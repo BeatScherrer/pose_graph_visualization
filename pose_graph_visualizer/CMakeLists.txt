@@ -9,10 +9,7 @@ add_compile_options(-std=c++17)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED
   roscpp
-  std_msgs
-  geometry_msgs
-  message_generation
-  visualization_msgs
+  pose_graph_visualizer_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -48,14 +45,6 @@ find_package(catkin REQUIRED
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
-## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-    VertexSE3.msg
-    EdgeSE3.msg
-    GraphSE3.msg
-)
-
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
@@ -70,12 +59,6 @@ add_message_files(
 #   Action2.action
 # )
 
-# Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  geometry_msgs  # Or other packages containing msgs
-)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -110,9 +93,7 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES ${PROJECT_NAME}
  CATKIN_DEPENDS
-  std_msgs
-  geometry_msgs
-  message_runtime
+  pose_graph_visualizer_msgs
   visualization_msgs
 #  DEPENDS system_lib
 )
@@ -139,7 +120,6 @@ add_library(${PROJECT_NAME}
 add_dependencies(${PROJECT_NAME}
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${PROJECT_NAME}_generate_messages_cpp # make sure the messages are generated first
 )
 
 ## Declare a C++ executable
@@ -159,7 +139,6 @@ add_executable(${PROJECT_NAME}_node
 add_dependencies(${PROJECT_NAME}_node
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
-  ${PROJECT_NAME}_generate_messages_cpp # make sure the messages are generated first
 )
 
 ## Specify libraries to link a library or executable target against

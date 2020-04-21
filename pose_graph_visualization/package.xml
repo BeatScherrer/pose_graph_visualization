@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package format="2">
+  <name>pose_graph_visualization</name>
+  <version>0.0.1</version>
+  <description>ROS visualization of a pose graph</description>
+
+  <maintainer email="beat.scherrer@gmail.com">Beat Scherrer</maintainer>
+
+  <license>TODO</license>
+
+  <author email="beat.scherrer@gmail.com">Beat Scherrer</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>pose_graph_visualizer_msgs</exec_depend>
+  <exec_depend>pose_graph_visualizer</exec_depend>
+
+  <export>
+    <metapackage />
+  </export>
+</package>

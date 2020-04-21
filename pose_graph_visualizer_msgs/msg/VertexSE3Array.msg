@@ -1,0 +1,1 @@
+VertexSE3[] vertex_array

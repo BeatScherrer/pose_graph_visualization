@@ -9,7 +9,7 @@
 int main(int argc, char** argv) {
   ros::init(argc, argv, "pose_graph_visualizer_node");
 
-  ros::NodeHandle node_handle;
+  ros::NodeHandle node_handle("pose_graph_visualizer");
 
   pgv::PoseGraphVisualizer pose_graph_visualizer(node_handle);
 

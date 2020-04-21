@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pose_graph_visualizer_msgs</name>
+  <version>0.0.0</version>
+  <description>The pose_graph_visualizer_msgs package</description>
+
+  <maintainer email="beat@todo.todo">beat</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>message_runtime</depend>
+  <depend>message_generation</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
