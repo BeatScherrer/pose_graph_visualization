@@ -46,7 +46,9 @@ void PoseGraphVisualizer::poseGraphCallback(
 
   visualization_msgs::MarkerArray marker_array;
 
+  // index tracker
   int i = 0;
+
   // for each vertex array add a CUBE_LIST marker with different colors.
   for (const auto& node_set : msg.vertex_arrays) {
     const auto& nodes = node_set.vertex_array;
@@ -59,7 +61,7 @@ void PoseGraphVisualizer::poseGraphCallback(
     cube_list.pose.orientation.x = 0.0;
     cube_list.pose.orientation.y = 0.0;
     cube_list.pose.orientation.z = 0.0;
-    cube_list.ns = "nodes";
+    cube_list.ns = "nodes_" + std::to_string(i);
 
     /* Cube lists render faster than marker arrays. Caveat is
     that each cube must have the same scale. */
@@ -71,9 +73,9 @@ void PoseGraphVisualizer::poseGraphCallback(
     cube_list.scale.y = 0.1;
     cube_list.scale.z = 0.1;
     cube_list.color.a = 1.0;
-    cube_list.color.r = 0.0;
+    cube_list.color.r = 1.0 - 1.0 /number_of_vertex_sets * (i + 1);
     cube_list.color.g = 0.0;
-    cube_list.color.b = 0.2 + 0.8 / number_of_vertex_sets * i;
+    cube_list.color.b = 1.0 + 1.0 / number_of_vertex_sets * (i + 1);
 
     for (const auto& vertex : nodes) {
       cube_list.points.push_back(vertex.pose.position);
@@ -85,6 +87,7 @@ void PoseGraphVisualizer::poseGraphCallback(
     ++i;
   }
 
+  // index tracker
   int j = 0;
 
   // TODO add different colors
@@ -103,18 +106,25 @@ void PoseGraphVisualizer::poseGraphCallback(
 
     line_list.scale.x = 0.02;
     line_list.color.a = 1.0;
-    line_list.color.r = 0.2 + 0.8 / number_of_edge_sets * j;
-    line_list.color.g = 0.0;
+    line_list.color.r = 1.0 + 1.0 / number_of_edge_sets * (j + 1);
+    line_list.color.g = 1.0 - 1.0 / number_of_edge_sets * (j + 1);
     line_list.color.b = 0.0;
     line_list.pose.orientation.w = 1.0;
     line_list.pose.orientation.x = 0.0;
     line_list.pose.orientation.y = 0.0;
     line_list.pose.orientation.z = 0.0;
-    line_list.ns = "edges";
+    line_list.ns = "edges_" + std::to_string(j);
 
     // TODO combine with above to now loop twice over the nodes
     // need to look for points in all the node arrays
     for (const auto& edge : edges) {
+      bool found_from_node = false;
+      bool found_to_node = false;
+
+      pose_graph_visualizer_msgs::VertexSE3 vertex_from;
+      pose_graph_visualizer_msgs::VertexSE3 vertex_to;
+
+      // check for nodes in all the node sets
       for (const auto& node_set : msg.vertex_arrays) {
         const auto& nodes = node_set.vertex_array;
         //
@@ -125,11 +135,11 @@ void PoseGraphVisualizer::poseGraphCallback(
                            return edge.from == vertex.index;
                          });
 
-        if (vertex_from_it == nodes.end()) {
+        if (vertex_from_it != nodes.end()) {
           // ROS_WARN_STREAM("Could not find vertex with index " << edge.from);
-          continue;
+          found_from_node = true;
+          vertex_from = *vertex_from_it;
         }
-        auto vertex_from = *vertex_from_it;
 
         // get the second point of the edge
         auto vertex_to_it =
@@ -138,13 +148,15 @@ void PoseGraphVisualizer::poseGraphCallback(
                            return edge.to == vertex.index;
                          });
 
-        if (vertex_to_it == nodes.end()) {
+        if (vertex_to_it != nodes.end()) {
+          found_to_node = true;
           // ROS_WARN_STREAM("Could not find vertex with index " << edge.to);
-          continue;
+          vertex_to = *vertex_to_it;
         }
-        auto vertex_to = *vertex_to_it;
+      }
 
-        // add the line between the vertices to the line list
+      // add the line between the vertices to the line list
+      if (found_from_node && found_to_node) {
         line_list.points.push_back(vertex_from.pose.position);
         line_list.points.push_back(vertex_to.pose.position);
       }
